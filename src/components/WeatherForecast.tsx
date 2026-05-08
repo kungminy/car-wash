@@ -17,35 +17,40 @@ interface Props {
 
 export default function WeatherForecast({ forecast, optimalDate }: Props) {
   return (
-    <div>
-      <h2 className="text-sm font-semibold text-slate-500 mb-3">5일 예보</h2>
-      <div className="grid grid-cols-5 gap-2">
-        {forecast.map((day) => {
+    <section>
+      <h2 className="text-sm font-semibold text-slate-500 mb-3">{forecast.length}일 예보</h2>
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+        {forecast.map((day, index) => {
           const isOptimal = day.date === optimalDate;
+          const isToday = index === 0;
           const isRainy = day.rainProbability > 40;
 
           return (
             <div
               key={day.date}
               className={[
-                'flex flex-col items-center gap-1.5 rounded-xl py-3 px-1 border transition-all',
+                'min-w-0 flex flex-col items-center gap-2 rounded-xl px-1.5 py-3 border transition-all',
                 isOptimal
-                  ? 'ring-2 ring-sky-400 bg-sky-50 border-sky-200'
+                  ? 'bg-sky-50 border-sky-300'
                   : 'bg-white border-slate-100',
+                isToday && !isOptimal ? 'border-slate-300' : '',
                 isRainy && !isOptimal ? 'opacity-50' : '',
               ].join(' ')}
             >
-              <span
-                className={[
-                  'text-xs font-semibold',
-                  isOptimal ? 'text-sky-600' : 'text-slate-500',
-                ].join(' ')}
-              >
-                {day.dayLabel}
-                {isOptimal && <span className="ml-0.5">★</span>}
-              </span>
+              <div className="h-5 flex items-center justify-center">
+                {isOptimal ? (
+                  <span className="rounded-full bg-sky-500 px-2 py-0.5 text-[11px] font-bold text-white">
+                    최적
+                  </span>
+                ) : isToday ? (
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+                    오늘
+                  </span>
+                ) : null}
+              </div>
+              <span className="text-xs font-semibold text-slate-500">{day.dayLabel}</span>
               {iconMap[day.condition]}
-              <span className={['text-xs font-medium', isOptimal ? 'text-slate-700' : 'text-slate-600'].join(' ')}>
+              <span className="text-xs font-medium text-slate-700">
                 {day.temperature}°
               </span>
               <div className="flex items-center gap-0.5">
@@ -58,6 +63,6 @@ export default function WeatherForecast({ forecast, optimalDate }: Props) {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

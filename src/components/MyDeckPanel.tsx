@@ -17,7 +17,7 @@ export default function MyDeckPanel({ deckByStep, totalCount, onRemove, onClear 
   const stepEntries = Object.entries(deckByStep) as [StepTag, CarWashProduct[]][];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
       <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
         <div className="flex items-center gap-2">
           <h2 className="text-sm font-bold text-slate-800">내 덱</h2>

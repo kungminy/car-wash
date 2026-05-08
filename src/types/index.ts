@@ -30,4 +30,9 @@ export interface CarWashProduct {
   description: string;
   capacity?: string;
   recommended: boolean;
+  imageUrl?: string;
+  link?: string;
+  price?: number;
+  mallName?: string;
+  source?: 'naver' | 'fallback';
 }

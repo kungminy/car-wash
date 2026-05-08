@@ -15,9 +15,15 @@ interface DeckStore {
   allProducts: CarWashProduct[];
   myDeck: string[];
   activeStep: StepTag | 'all';
+  searchQuery: string;
+  source: 'naver' | 'fallback';
+  isLoading: boolean;
+  error: string | null;
+  initProducts: () => Promise<void>;
   filteredProducts: () => CarWashProduct[];
   toggleMyDeck: (id: string) => void;
   setActiveStep: (step: StepTag | 'all') => void;
+  setSearchQuery: (query: string) => void;
   isInMyDeck: (id: string) => boolean;
   myDeckProducts: () => CarWashProduct[];
   myDeckByStep: () => Partial<Record<StepTag, CarWashProduct[]>>;
@@ -30,11 +36,63 @@ export const useDeckStore = create<DeckStore>()(
       allProducts: mockProducts,
       myDeck: [],
       activeStep: 'all',
+      searchQuery: '',
+      source: 'fallback',
+      isLoading: false,
+      error: null,
+
+      initProducts: async () => {
+        set({ isLoading: true, error: null });
+
+        try {
+          const response = await fetch('/api/products');
+
+          if (!response.ok) {
+            throw new Error('상품 정보를 불러오지 못했습니다.');
+          }
+
+          const data = (await response.json()) as {
+            products: CarWashProduct[];
+            source: 'naver' | 'fallback';
+          };
+
+          set({
+            allProducts: data.products,
+            source: data.source,
+            isLoading: false,
+          });
+        } catch {
+          set({
+            allProducts: mockProducts,
+            source: 'fallback',
+            isLoading: false,
+            error: '상품 API 연결에 실패해 한국형 임시 데이터를 표시하고 있어요.',
+          });
+        }
+      },
 
       filteredProducts: () => {
-        const { allProducts, activeStep } = get();
-        if (activeStep === 'all') return allProducts;
-        return allProducts.filter((p) => p.stepTag === activeStep);
+        const { allProducts, activeStep, searchQuery } = get();
+        const query = searchQuery.trim().toLowerCase();
+        const byStep =
+          activeStep === 'all'
+            ? allProducts
+            : allProducts.filter((product) => product.stepTag === activeStep);
+
+        if (!query) return byStep;
+
+        return byStep.filter((product) =>
+          [
+            product.name,
+            product.brand,
+            product.stepTag,
+            product.description,
+            product.mallName ?? '',
+          ]
+            .join(' ')
+            .toLowerCase()
+            .includes(query)
+        );
       },
 
       toggleMyDeck: (id) => {
@@ -46,6 +104,8 @@ export const useDeckStore = create<DeckStore>()(
       },
 
       setActiveStep: (step) => set({ activeStep: step }),
+
+      setSearchQuery: (query) => set({ searchQuery: query }),
 
       isInMyDeck: (id) => get().myDeck.includes(id),
 

@@ -25,7 +25,7 @@ function formatDateKorean(dateStr: string): string {
 
 function getDayOfWeekKorean(dateStr: string): string {
   const days = ['일', '월', '화', '수', '목', '금', '토'];
-  const d = new Date(dateStr);
+  const d = new Date(`${dateStr}T00:00:00+09:00`);
   return days[d.getDay()] + '요일';
 }
 
@@ -37,11 +37,11 @@ export default function OptimalDayBanner({ optimalDay }: Props) {
   const { day, score, daysFromNow } = optimalDay;
 
   return (
-    <div className="bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 rounded-2xl p-6 border border-sky-100 shadow-sm">
+    <div className="bg-sky-50 rounded-2xl p-6 border border-sky-100 shadow-sm">
       <div className="flex items-start justify-between mb-4">
         <div>
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600 bg-sky-100 px-2.5 py-1 rounded-full mb-3">
-            ⭐ 세차 최적일
+            다음 세차 최적일
           </span>
           <p className="text-sm font-medium text-sky-600">{getDaysFromNowLabel(daysFromNow)}</p>
           <div className="mt-1">

@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import AppShell from "@/components/AppShell";
 import "./globals.css";
-
-const geist = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "CarWash Planner — 세차 최적일 알리미",
@@ -18,8 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${geist.variable} h-full antialiased`}>
-      <body className="min-h-full">{children}</body>
+    <html lang="ko" className="h-full antialiased">
+      <body className="min-h-full">
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }
