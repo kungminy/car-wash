@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Car, Home, PackagePlus } from 'lucide-react';
+import { Car, FlaskConical, ShoppingBag, Sparkles } from 'lucide-react';
 
 const navItems = [
-  { href: '/', label: '홈', icon: Home },
-  { href: '/products', label: '용품', icon: PackagePlus },
+  { href: '/', label: '오늘의 세차', icon: Sparkles },
+  { href: '/supplies', label: '내 용품함', icon: FlaskConical },
+  { href: '/recommend', label: '용품 추천', icon: ShoppingBag },
 ];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -28,7 +29,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {children}
 
       <nav className="fixed bottom-0 inset-x-0 z-20 bg-white border-t border-slate-200">
-        <div className="max-w-2xl mx-auto grid grid-cols-2 h-16">
+        <div className="max-w-2xl mx-auto grid grid-cols-3 h-16">
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
 
